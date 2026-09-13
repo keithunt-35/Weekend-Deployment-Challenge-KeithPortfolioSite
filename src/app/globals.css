@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap");
+
+@layer base {
+  :root {
+    --paper: #f4f0e6;
+    --ink: #12110f;
+    --mute: #6b655c;
+    --line: #d8d1c3;
+    --clay: #c45c26;
+    --space: 8px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Inter, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  .bg-ink :focus-visible,
+  [data-theme="ink"] :focus-visible {
+    outline-color: var(--paper);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--paper);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ink);
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply mx-auto w-full max-w-5xl px-4 py-16 sm:px-8 lg:py-24;
+  }
+
+  .section-label {
+    @apply mb-2 font-mono text-xs font-medium uppercase tracking-[0.16em] text-clay;
+  }
+
+  .section-heading {
+    @apply font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl;
+  }
+
+  .section-sub {
+    @apply mt-3 max-w-xl text-base leading-relaxed text-mute;
+  }
+
+  .rule {
+    @apply h-px w-full bg-line;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-touch min-w-touch items-center justify-center gap-2
+           bg-ink px-5 py-3 text-sm font-semibold text-paper
+           transition-[transform,background-color,box-shadow] duration-150
+           hover:-translate-y-px hover:bg-clay
+           active:translate-y-0 active:scale-[0.98]
+           disabled:pointer-events-none disabled:opacity-40;
+  }
+
+  .btn-primary:focus-visible {
+    box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+    outline: none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-touch min-w-touch items-center justify-center gap-2
+           border border-ink bg-transparent px-5 py-3 text-sm font-semibold text-ink
+           transition-[transform,background-color,color] duration-150
+           hover:-translate-y-px hover:bg-ink hover:text-paper
+           active:translate-y-0 active:scale-[0.98];
+  }
+
+  .btn-secondary:focus-visible {
+    box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+    outline: none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex min-h-touch items-center justify-center gap-2
+           px-3 py-2 text-sm font-medium text-mute
+           underline-offset-4 transition-colors duration-150
+           hover:text-ink hover:underline;
+  }
+
+  .field {
+    @apply w-full min-h-touch border border-line bg-paper px-4 py-3
+           text-sm text-ink placeholder:text-mute/70
+           transition-colors duration-150
+           hover:border-ink/40
+           focus:border-ink focus:outline-none;
+  }
+
+  .field[aria-invalid="true"] {
+    @apply border-clay;
+  }
+
+  .field:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+
+  .chip {
+    @apply inline-flex min-h-touch items-center border border-line px-3
+           font-mono text-xs uppercase tracking-wider text-mute
+           transition-colors duration-150
+           hover:border-ink hover:text-ink;
+  }
+
+  .chip-active {
+    @apply border-ink bg-ink text-paper hover:border-ink hover:text-paper;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #e7e1d4 25%, #f4f0e6 50%, #e7e1d4 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s ease-in-out infinite;
+  }
+
+  .link-row {
+    @apply group relative block border-b border-line py-6
+           transition-colors duration-150 hover:bg-ink/[0.03];
+  }
+}
