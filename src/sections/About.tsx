@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { stats } from "@/data";
 
 const FACTS = [

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import { siteConfig } from "@/data";
 
@@ -47,60 +48,101 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto w-full max-w-5xl px-6 pb-20 pt-32 sm:px-8 sm:pb-24">
-        {/* Eyebrow */}
-        <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/40">
-          Kampala · Makerere · Open to work
-        </p>
+        {/*
+         * ── PHOTO INSTRUCTIONS ──────────────────────────────────────────────
+         * Drop your headshot at:  public/keith.jpg  (or .png / .webp)
+         * Recommended size: 800×1000 px, portrait crop, face near top-centre.
+         * The placeholder below shows while the file isn't there yet.
+         * ────────────────────────────────────────────────────────────────────
+         */}
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:gap-16">
 
-        {/* Headline — tightest possible leading at large sizes */}
-        <h1 className="max-w-3xl font-display font-semibold leading-[1.04] tracking-tight text-paper
-                       text-[clamp(2.5rem,7vw,5rem)]">
-          Building the tech
-          <br />
-          <span className="text-clay">Africa deserves.</span>
-        </h1>
+          {/* ── Left: all text ── */}
+          <div className="flex-1">
+            {/* Eyebrow */}
+            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.2em] text-paper/40">
+              Kampala · Makerere · Open to work
+            </p>
 
-        {/* Pitch — max 52ch so it never becomes a wall of text */}
-        <p className="mt-8 max-w-[52ch] text-[1.0625rem] leading-[1.65] text-paper/60">
-          {siteConfig.pitch}
-        </p>
+            {/* Headline */}
+            <h1 className="max-w-3xl font-display font-semibold leading-[1.04] tracking-tight text-paper
+                           text-[clamp(2.5rem,7vw,5rem)]">
+              Building the tech
+              <br />
+              <span className="text-clay">Africa deserves.</span>
+            </h1>
 
-        {/* Typewriter role */}
-        <p className="mt-6 font-mono text-sm text-paper/40">
-          Keith Tugume ·{" "}
-          <span className="text-paper/80">
-            {displayed}
-            <span className="animate-blink" aria-hidden>▌</span>
-          </span>
-        </p>
+            {/* Pitch */}
+            <p className="mt-8 max-w-[52ch] text-[1.0625rem] leading-[1.65] text-paper/60">
+              {siteConfig.pitch}
+            </p>
 
-        {/* CTAs — column on mobile, row from sm */}
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-          <button
-            onClick={() => go("#projects")}
-            className="btn-primary"
-          >
-            See the work
-          </button>
-          <button
-            onClick={() => go("#about")}
-            className="btn-secondary
-                       border-paper/30 text-paper
-                       hover:border-paper hover:bg-paper hover:text-ink"
-          >
-            Read the story
-          </button>
-          <a
-            href={siteConfig.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-[44px] items-center px-1 text-sm
-                       text-paper/40 underline-offset-4
-                       transition-colors duration-120 hover:text-paper hover:underline
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
-          >
-            GitHub ↗
-          </a>
+            {/* Typewriter role */}
+            <p className="mt-6 font-mono text-sm text-paper/40">
+              Keith Tugume ·{" "}
+              <span className="text-paper/80">
+                {displayed}
+                <span className="animate-blink" aria-hidden>▌</span>
+              </span>
+            </p>
+
+            {/* CTAs */}
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <button onClick={() => go("#projects")} className="btn-primary">
+                See the work
+              </button>
+              <button
+                onClick={() => go("#about")}
+                className="btn-secondary border-paper/30 text-paper
+                           hover:border-paper hover:bg-paper hover:text-ink"
+              >
+                Read the story
+              </button>
+              <a
+                href={siteConfig.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-[44px] items-center px-1 text-sm
+                           text-paper/40 underline-offset-4
+                           transition-colors duration-120 hover:text-paper hover:underline
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
+              >
+                GitHub ↗
+              </a>
+            </div>
+          </div>
+
+          {/* ── Right: headshot ── */}
+          {/* Replace /keith.jpg with your actual file name if different */}
+          <div className="hidden lg:block lg:w-[280px] lg:shrink-0 xl:w-[320px]">
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-paper/10">
+              <Image
+                src="/keith.jpg"
+                alt="Keith Tugume — software engineer and tennis player in Kampala"
+                fill
+                sizes="320px"
+                className="object-cover object-top grayscale transition-[filter] duration-500 hover:grayscale-0"
+                priority
+                onError={(e) => {
+                  /* Hide broken image — placeholder text shows instead */
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              {/* Shown only while /keith.jpg is missing */}
+              <div
+                aria-hidden
+                className="absolute inset-0 flex flex-col items-center justify-center gap-2 border border-paper/10"
+              >
+                <span className="font-mono text-[11px] uppercase tracking-wider text-paper/20">
+                  Add photo
+                </span>
+                <span className="font-mono text-[10px] text-paper/15">
+                  public/keith.jpg
+                </span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
