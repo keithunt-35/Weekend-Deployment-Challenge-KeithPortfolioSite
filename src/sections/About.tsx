@@ -1,4 +1,4 @@
-import Image from "next/image";
+import PhotoFrame from "@/components/ui/PhotoFrame";
 import { stats } from "@/data";
 
 const FACTS = [
@@ -55,6 +55,24 @@ export default function About() {
 
         {/* Facts sidebar */}
         <aside className="lg:col-span-5" aria-label="Quick facts">
+          {/*
+           * ── PHOTO INSTRUCTIONS ────────────────────────────────────────────
+           * Spot 2: About section photo — appears above the fact table.
+           * Good choice: candid shot, hackathon, or at the tennis court.
+           * File: public/keith-about.jpg  (landscape or square works well here)
+           * Recommended: 800×600 px minimum.
+           * ──────────────────────────────────────────────────────────────────
+           */}
+          <div className="mb-8">
+            <PhotoFrame
+              src="/keith-about.jpg"
+              alt="Keith at work — hackathon, lab, or on the Makerere campus"
+              hint="public/keith-about.jpg"
+              aspectClass="aspect-[4/3]"
+              sizes="(min-width: 1024px) 380px, 100vw"
+            />
+          </div>
+
           <dl className="divide-y divide-line border-y border-line">
             {FACTS.map(([label, value]) => (
               <div

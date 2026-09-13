@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import { siteConfig } from "@/data";
+import PhotoFrame from "@/components/ui/PhotoFrame";
 
 const ROLES = ["Web3 engineer", "IoT builder", "ML explorer", "Full-stack dev"];
 
@@ -115,32 +115,14 @@ export default function Hero() {
           {/* ── Right: headshot ── */}
           {/* Replace /keith.jpg with your actual file name if different */}
           <div className="hidden lg:block lg:w-[280px] lg:shrink-0 xl:w-[320px]">
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-paper/10">
-              <Image
-                src="/keith.jpg"
-                alt="Keith Tugume — software engineer and tennis player in Kampala"
-                fill
-                sizes="320px"
-                className="object-cover object-top grayscale transition-[filter] duration-500 hover:grayscale-0"
-                priority
-                onError={(e) => {
-                  /* Hide broken image — placeholder text shows instead */
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
-              />
-              {/* Shown only while /keith.jpg is missing */}
-              <div
-                aria-hidden
-                className="absolute inset-0 flex flex-col items-center justify-center gap-2 border border-paper/10"
-              >
-                <span className="font-mono text-[11px] uppercase tracking-wider text-paper/20">
-                  Add photo
-                </span>
-                <span className="font-mono text-[10px] text-paper/15">
-                  public/keith.jpg
-                </span>
-              </div>
-            </div>
+            <PhotoFrame
+              src="/keith.jpg"
+              alt="Keith Tugume — software engineer and tennis player in Kampala"
+              hint="public/keith.jpg"
+              aspectClass="aspect-[4/5]"
+              sizes="320px"
+              priority
+            />
           </div>
 
         </div>
