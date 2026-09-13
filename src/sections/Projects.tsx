@@ -6,54 +6,90 @@ import type { Project } from "@/data";
 import EmptyState from "@/components/ui/EmptyState";
 
 const FILTERS = ["All", "Web3", "IoT", "Full-Stack", "Open Source", "Cloud"] as const;
+type Filter = (typeof FILTERS)[number];
 
 function ProjectRow({ project, index }: { project: Project; index: number }) {
   const n = String(index + 1).padStart(2, "0");
+
   return (
-    <article className="link-row">
-      <div className="absolute left-0 top-0 h-full w-0 bg-clay transition-all duration-150 group-hover:w-1" />
-      <div className="flex flex-col gap-3 pl-0 sm:flex-row sm:gap-8">
-        <span className="font-mono text-xs text-mute sm:w-8 sm:pt-1">{n}</span>
-        <div className="min-w-0 flex-1">
+    <article className="row group pl-0">
+      <div className="grid gap-4 sm:grid-cols-[2rem_1fr] sm:gap-8">
+        {/* Index */}
+        <span
+          className="hidden font-mono text-xs text-mute transition-colors duration-120
+                     group-hover:text-clay sm:block sm:pt-1"
+          aria-hidden
+        >
+          {n}
+        </span>
+
+        {/* Body */}
+        <div className="min-w-0">
+          {/* Title row */}
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="font-display text-2xl font-semibold text-ink transition-colors group-hover:text-clay">
+            <h3
+              className="font-display text-[1.375rem] font-semibold text-ink
+                         transition-colors duration-120 group-hover:text-clay"
+            >
               {project.title}
             </h3>
             <span className="font-mono text-xs text-mute">{project.year}</span>
-            <span className="font-mono text-[11px] uppercase tracking-wider text-mute">
+            <span className="font-mono text-[11px] uppercase tracking-wider text-mute/70">
               {project.status}
             </span>
           </div>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-mute">{project.summary}</p>
-          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
-            <div>
-              <dt className="font-mono text-[11px] uppercase tracking-wider text-clay">Problem</dt>
-              <dd className="mt-1 text-mute">{project.problem}</dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[11px] uppercase tracking-wider text-clay">Fix</dt>
-              <dd className="mt-1 text-mute">{project.solution}</dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[11px] uppercase tracking-wider text-clay">Result</dt>
-              <dd className="mt-1 text-mute">{project.outcome}</dd>
-            </div>
+
+          {/* Summary */}
+          <p className="mt-2 max-w-[64ch] text-sm leading-relaxed text-mute">
+            {project.summary}
+          </p>
+
+          {/* Problem / Fix / Result — hidden on mobile, shown from sm */}
+          <dl className="mt-4 hidden gap-4 text-sm sm:grid sm:grid-cols-3">
+            {([
+              ["Problem", project.problem],
+              ["Solution", project.solution],
+              ["Result",   project.outcome],
+            ] as const).map(([dt, dd]) => (
+              <div key={dt}>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-clay">
+                  {dt}
+                </dt>
+                <dd className="mt-1 leading-relaxed text-mute">{dd}</dd>
+              </div>
+            ))}
           </dl>
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            {project.stack.slice(0, 5).map((tech) => (
-              <span key={tech} className="font-mono text-[11px] text-mute">
+
+          {/* Footer row: stack + links */}
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+            {/* Stack — max 4 items, rest truncated */}
+            {project.stack.slice(0, 4).map((tech) => (
+              <span key={tech} className="font-mono text-[11px] text-mute/70">
                 {tech}
               </span>
             ))}
-            <span className="mx-1 hidden text-line sm:inline">/</span>
+            {project.stack.length > 4 && (
+              <span className="font-mono text-[11px] text-mute/40">
+                +{project.stack.length - 4} more
+              </span>
+            )}
+
+            {/* Divider */}
+            {(project.repoUrl || project.demoUrl) && (
+              <span aria-hidden className="text-line/60 select-none">/</span>
+            )}
+
             {project.repoUrl && (
               <a
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-touch items-center text-sm font-medium text-ink underline-offset-4 hover:underline"
+                className="inline-flex min-h-[44px] items-center text-sm font-medium text-ink
+                           underline-offset-4 transition-colors duration-120 hover:text-clay
+                           hover:underline focus-visible:outline-none focus-visible:underline"
+                onClick={(e) => e.stopPropagation()}
               >
-                Code
+                Code ↗
               </a>
             )}
             {project.demoUrl && (
@@ -61,9 +97,12 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-touch items-center text-sm font-medium text-ink underline-offset-4 hover:underline"
+                className="inline-flex min-h-[44px] items-center text-sm font-medium text-ink
+                           underline-offset-4 transition-colors duration-120 hover:text-clay
+                           hover:underline focus-visible:outline-none focus-visible:underline"
+                onClick={(e) => e.stopPropagation()}
               >
-                Live
+                Live ↗
               </a>
             )}
           </div>
@@ -74,15 +113,15 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
 }
 
 export default function Projects() {
-  const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
+  const [filter, setFilter] = useState<Filter>("All");
 
   const visible = useMemo(() => {
     if (filter === "All") return projects;
+    const q = filter.toLowerCase();
     return projects.filter(
       (p) =>
-        p.tags.some((t) => t.toLowerCase() === filter.toLowerCase()) ||
-        p.tags.some((t) => t.toLowerCase().includes(filter.toLowerCase())) ||
-        p.stack.some((s) => s.toLowerCase().includes(filter.toLowerCase()))
+        p.tags.some((t) => t.toLowerCase().includes(q)) ||
+        p.stack.some((s) => s.toLowerCase().includes(q)),
     );
   }, [filter]);
 
@@ -90,9 +129,16 @@ export default function Projects() {
     <section id="projects" className="section-container border-t border-line">
       <p className="section-label">03 — Work</p>
       <h2 className="section-heading">Shipped, not hypothetical</h2>
-      <p className="section-sub">Experiments, lab pieces, and tools I actually put in front of people.</p>
+      <p className="section-sub">
+        Experiments, lab pieces, and tools I actually put in front of people.
+      </p>
 
-      <div className="mt-8 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Filter work">
+      {/* Filter chips */}
+      <div
+        className="mt-8 flex gap-2 overflow-x-auto pb-1"
+        role="tablist"
+        aria-label="Filter projects by category"
+      >
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -106,12 +152,17 @@ export default function Projects() {
         ))}
       </div>
 
-      <div className="mt-4 border-t border-ink">
+      {/* Project list */}
+      <div
+        className="mt-3 border-t border-ink"
+        role="tabpanel"
+        aria-label={`${filter} projects`}
+      >
         {visible.length === 0 ? (
-          <div className="py-8">
+          <div className="py-6">
             <EmptyState
-              title="Nothing in this lane"
-              body="That filter is empty. Try another, or skip straight to the repos."
+              title="Nothing here yet"
+              body="That filter is empty. Try another lane, or head straight to the repos."
               action={
                 <div className="flex flex-wrap gap-3">
                   <button onClick={() => setFilter("All")} className="btn-primary">
@@ -130,19 +181,18 @@ export default function Projects() {
             />
           </div>
         ) : (
-          visible.map((project, i) => (
-            <ProjectRow key={project.slug} project={project} index={i} />
-          ))
+          visible.map((p, i) => <ProjectRow key={p.slug} project={p} index={i} />)
         )}
       </div>
 
+      {/* Footer CTA */}
       <a
         href="https://github.com/keithunt-35"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-secondary mt-10"
+        className="btn-secondary mt-10 inline-flex"
       >
-        All 50+ repos on GitHub
+        All 50+ repos on GitHub ↗
       </a>
     </section>
   );
