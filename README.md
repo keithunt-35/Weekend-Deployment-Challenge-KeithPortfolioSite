@@ -2,7 +2,7 @@
 
 > Personal portfolio and dev blog for Keith Tugume — Software Engineering student at Makerere University, building at the intersection of Web3, IoT, and machine learning in Kampala, Uganda.
 
-**Live site → [keiths-site-gamma.vercel.app](https://main.d1h2b4dsagja3r.amplifyapp.com/)**
+**Live site → [https://main.d1h2b4dsagja3r.amplifyapp.com/](https://main.d1h2b4dsagja3r.amplifyapp.com/)**
 
 ---
 
